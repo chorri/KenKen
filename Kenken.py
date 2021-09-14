@@ -1,7 +1,7 @@
-#%% Libreria
+
 from ortools.sat.python import cp_model
 n = 10
-#%% Crear CSP
+#Crear CSP
 model = cp_model.CpModel()
 # Variables y dominios
 grilla = []
@@ -10,7 +10,7 @@ for i in range(n):
     for j in range(n):
         fila += [model.NewIntVar(1, n,'x'+str(i)+str(j))]
     grilla += [fila]
-print(grilla)
+#print(grilla)
 # Restricciones
 for i in range(n):
     # Toda fila tiene valores distintos
@@ -61,18 +61,17 @@ model.Add(grilla[9][1] - grilla[9][2] == 2)
 model.Add(grilla[9][3] == 3)
 model.Add(grilla[9][4] == 6)
 model.Add(grilla[9][5] + grilla[9][6] + grilla[9][7] + grilla[9][8] + grilla[9][9] == 27)
-# Solucion
-solver = cp_model.CpSolver()
-status = solver.Solve(model)
-if status == 4:
-    for i in range(n):
-        for j in range(n):
-            if solver.Value(grilla[i][j]) != 10:
-                print("0"+str(solver.Value(grilla[i][j])), end = " ")
-            else:
-                print(str(solver.Value(grilla[i][j])), end = " ")
-        print()
-else:
-    print("No existe solucion")
-
-# %%
+def solve():
+    # Solucion
+    solver = cp_model.CpSolver()
+    status = solver.Solve(model)
+    if status == 4:
+        for i in range(n):
+            for j in range(n):
+                if solver.Value(grilla[i][j]) != 10:
+                    print("0"+str(solver.Value(grilla[i][j])), end = " ")
+                else:
+                    print(str(solver.Value(grilla[i][j])), end = " ")
+            print()
+    else:
+        print("No existe solucion")
