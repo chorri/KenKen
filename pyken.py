@@ -9,13 +9,7 @@ surface = pygame.display.set_mode((600, 400))
 # Variables globales
 RED = (255, 0, 0)
 GRAY = (150, 150, 150)
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-CYAN = (0, 255, 255)
-MAGENTA = (255, 0, 255)
-WHITE = (255,255,255)
 # Test Texto
 font1 = pygame.font.SysFont('ActionIsShaded', 30)
 v = -1
@@ -26,18 +20,18 @@ def set_grid(value, difficulty):
     v = difficulty
     print(v)
 def start_the_game():
-    global grilla_sol
-    grilla_sol = solve()
+    global grilla_sol, v
+    grilla_sol = solve(v)
     # Elegir la grilla
-    img_name = "10x10.PNG"
+    img_name = "sum.PNG"
     if v == 1:
-        img_name = "10x10.PNG"
+        img_name = "sum.PNG"
     elif v == 2:
-        img_name = "9x9.PNG"
+        img_name = "mult.png"
     # Cerrar el menu
     pygame_menu.events.EXIT
     # Titulo
-    pygame.display.set_caption("CPS")
+    pygame.display.set_caption("CSP")
     # Incrementar tamaño de pantalla
     surface = pygame.display.set_mode((750, 750))
     run = True
@@ -45,6 +39,10 @@ def start_the_game():
     tablero = pygame.image.load(img_name).convert()
     rect = tablero.get_rect()
     rect.center = 750//1.5, 750//1.5
+    if v == 1:
+        rect.center = 750//1.5, 750//1.5
+    elif v == 2:
+        rect.center = 750//1.6555, 750//1.65
     tablero = pygame.transform.scale(tablero, (600, 600))
     #textsurface = font1.render(str(grilla_sol[0][0]), False , RED)
     # Boton run
@@ -83,12 +81,12 @@ def start_the_game():
                 x=110
                 y+=58.6
         pygame.display.update()
-# Configuraciones con pygame_menu
-pygame.display.set_caption("TA1: Solver para Kenken")
-menu = pygame_menu.Menu('Kenken csp solver', 600, 400, theme=pygame_menu.themes.THEME_BLUE)
-# Estos metodos usan un callback para llamar una funcion
-menu.add.selector('Select Grid :', [('10x10', 1),('9x9', 2)], onchange=set_grid)
-# El importante es este start_game
+# Titulo
+pygame.display.set_caption("Solver para resolver el puzzle Kenken")
+menu = pygame_menu.Menu('Kenken', 600, 400, theme=pygame_menu.themes.THEME_BLUE)
+# Dificultad
+menu.add.selector('Selecciona tabla:', [('sumas y restas', 1),('multiplicaciones', 2)], onchange=set_grid)
+# Jugar y Salir
 menu.add.button('Play', start_the_game)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 # Loop para que no se cierre el menu
