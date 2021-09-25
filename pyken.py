@@ -1,7 +1,6 @@
 import pygame
 import pygame_menu
 from Kenken import solve
-import sys
 # Inicio de pygame
 pygame.init()
 # Tamaño de la pantalla
@@ -9,7 +8,8 @@ surface = pygame.display.set_mode((600, 400))
 # Variables globales
 RED = (255, 0, 0)
 GRAY = (150, 150, 150)
-BLUE = (0, 0, 255)
+CYAN = (0, 255, 255)
+BLACK = (0, 0, 0)
 # Test Texto
 font1 = pygame.font.SysFont('ActionIsShaded', 30)
 v = -1
@@ -18,10 +18,9 @@ grilla_sol = None
 def set_grid(value, difficulty):
     global v
     v = difficulty
-    print(v)
 def start_the_game():
     global grilla_sol, v
-    grilla_sol = solve(v)
+    grilla_sol , tiempo = solve(v)
     # Elegir la grilla
     img_name = "sum.PNG"
     if v == 1:
@@ -44,7 +43,6 @@ def start_the_game():
     elif v == 2:
         rect.center = 750//1.6555, 750//1.65
     tablero = pygame.transform.scale(tablero, (600, 600))
-    #textsurface = font1.render(str(grilla_sol[0][0]), False , RED)
     # Boton run
     x_button = 300
     y_button = 700
@@ -67,7 +65,7 @@ def start_the_game():
         surface.blit(tablero, rect)
         # Dibujar Boton
         pygame.draw.rect(surface, RED, button)
-        text_surf = font1.render("Run", True, BLUE)
+        text_surf = font1.render("Run", True, CYAN)
         text_rect = text_surf.get_rect(center=(x_button + 38, y_button + 22))
         surface.blit(text_surf, text_rect)
         if active:
@@ -80,6 +78,9 @@ def start_the_game():
                     x+=58.8
                 x=110
                 y+=58.6
+            time_surf = font1.render("Tiempo: " + str(tiempo), True, BLACK)
+            surface.blit(time_surf, (500,700))
+
         pygame.display.update()
 # Titulo
 pygame.display.set_caption("Solver para resolver el puzzle Kenken")
