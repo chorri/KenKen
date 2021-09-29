@@ -1,6 +1,6 @@
 from ortools.sat.python import cp_model
 n = 10
-def restrictions(dificultad, model, grilla):
+def restrictions(dificultad, model, grilla, laux, strategy):
     # Restricciones
     for i in range(n):
         # Toda fila tiene valores distintos
@@ -8,6 +8,7 @@ def restrictions(dificultad, model, grilla):
         # Toda columna tiene valores distintos
         model.AddAllDifferent([x[i] for x in grilla])
     # Cages
+    
     if dificultad == 1:
         model.Add(grilla[0][1] + grilla[1][1] == 7)
         model.Add(grilla[0][2] + grilla[0][3] + grilla[0][4] + grilla[1][3] + grilla[1][4] == 38)
@@ -152,28 +153,43 @@ def restrictions(dificultad, model, grilla):
         model.AddDivisionEquality(t2, grilla[8][8],grilla[7][8])
         model.Add(t2 == 8).OnlyEnforceIf(b[1])
         model.Add(t2 != 8).OnlyEnforceIf(b[1].Not())
-        #model.AddDivisionEquality(8, grilla[7][8], grilla[8][8])
+        model.AddDivisionEquality(8, grilla[7][8], grilla[8][8])
+    
+    if strategy == 1:
+        # Search for x values in increasing order.
+        model.AddDecisionStrategy(laux ,cp_model.CHOOSE_FIRST, cp_model.SELECT_MIN_VALUE)
+    if strategy == 2:
+        # Search for x values in decresing order.
+        model.AddDecisionStrategy(laux ,cp_model.CHOOSE_FIRST, cp_model.SELECT_MAX_VALUE)
+    if strategy == 3:
+        model.AddDecisionStrategy(laux ,cp_model.CHOOSE_FIRST, cp_model.SELECT_LOWER_HALF)
+    if strategy == 4:
+        model.AddDecisionStrategy(laux ,cp_model.CHOOSE_FIRST, cp_model.SELECT_UPPER_HALF)
 
 
-def solve(dificultad):
+
+def solve(dificultad, strategy):
     #Crear CSP
     model = cp_model.CpModel()
     # Variables y dominios
     grilla = []
+    laux = []
     for i in range(n):
         fila = []
         for j in range(n):
-            fila += [model.NewIntVar(1, n,'x'+str(i)+str(j))]
+            fila += [model.NewIntVar(1, n,'grilla_'+str(i)+str(j))]
+            laux.append(model.NewIntVar(1, n,'grilla_'+str(i)+str(j)))
         grilla += [fila]
-    restrictions(dificultad, model, grilla)
+
+    restrictions(dificultad, model, grilla, laux, strategy)
     # Solucion
     solver = cp_model.CpSolver()
     solver.Solve(model)
     tiempo = solver.WallTime()
     my_sol = []
     my_sol = [[] for _ in range(n)]
+    #print(grilla)
     for i in range(n):
         for j in range(n):
             my_sol[i].append(solver.Value(grilla[i][j]))
     return my_sol, tiempo
-print(solve(2))

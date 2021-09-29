@@ -5,5 +5,5 @@ setup(
         version = "1.0",
         description = "hello there",
 	options={"build_exe": build_exe_options},
-        executables = [Executable("pyken.py", base=None)]
+        executables = [Executable("pyken.py", base="Win32GUI")]
 )

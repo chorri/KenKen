@@ -1,8 +1,11 @@
 import pygame
 import pygame_menu
+from pygame.locals import *
 from Kenken import solve
+
 # Inicio de pygame
 pygame.init()
+pygame.font.init()
 # Tamaño de la pantalla
 surface = pygame.display.set_mode((600, 400))
 # Variables globales
@@ -11,7 +14,7 @@ GRAY = (150, 150, 150)
 CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 # Test Texto
-font1 = pygame.font.SysFont('ActionIsShaded', 30)
+font1 = pygame.font.SysFont('Comic Sans Ms', 25)
 v = -1
 grilla_sol = None
 # Funcion llamanda desde el atributo selector del pygame_menu
@@ -20,7 +23,7 @@ def set_grid(value, difficulty):
     v = difficulty
 def start_the_game():
     global grilla_sol, v
-    grilla_sol , tiempo = solve(v)
+    grilla_sol , tiempo = solve(v, 1)
     # Elegir la grilla
     img_name = "sum.PNG"
     if v == 1:
